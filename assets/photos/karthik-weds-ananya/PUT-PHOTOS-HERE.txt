@@ -1,0 +1,1 @@
+﻿Put groom.jpg, bride.jpg and gallery photos 1.jpg, 2.jpg ... here (names must match the data file).
