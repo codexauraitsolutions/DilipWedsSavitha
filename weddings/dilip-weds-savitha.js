@@ -106,7 +106,10 @@ window.WEDDING = {
     enabled: true,
     decor: true,
     respondBy: "",                        // e.g. "2026-11-10"; "" hides the line
-    whatsappNumber: "919100867234",       // +91 91008 67234 — country code + number, no + or spaces; "" hides the WhatsApp button
+    askSide: true,                        // ask "groom's side or bride's side"; false to remove the question
+    askEvents: true,                      // ask which occasions the guest will attend (ticks, taken from the events list); false to remove
+    whatsappNumber: "919100867234",       // GROOM'S side: +91 91008 67234 — country code + number, no + or spaces
+    whatsappBride: "919397603920",        // BRIDE'S side: +91 93976 03920 — replies from bride's-side guests go here
     maxGuests: 10,
     endpoint: ""
   },

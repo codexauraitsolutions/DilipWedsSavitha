@@ -252,6 +252,17 @@ img { display: block; max-width: 100%; }
 .choice input:checked + span { background: var(--ink); border-color: var(--ink); color: #d9cfb6; }
 .choice input:checked + span b { color: #fff; }
 .choice input:focus-visible + span { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
+.choice b { letter-spacing: .1em; }
+/* tick-box list (which occasions the guest will attend) */
+.ticks { display: grid; gap: 8px; margin-top: 8px; }
+.form .ticks label { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink); transition: .2s; }
+.ticks input { position: absolute; opacity: 0; }
+.ticks i { flex: none; width: 21px; height: 21px; display: grid; place-items: center; border: 1.5px solid var(--gold); border-radius: 6px; background: #fff; }
+.ticks input:checked + i { background: var(--ink); border-color: var(--ink); }
+.ticks input:checked + i::after { content: ''; width: 5px; height: 10px; margin-top: -2px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.ticks input:focus-visible + i { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
+.form .ticks label:has(input:checked) { border-color: var(--ink); background: var(--bg); }
+.ticks small { display: block; margin-top: 1px; font-size: 10px; font-weight: 400; letter-spacing: .06em; color: var(--ink-soft); }
 .guests { display: flex; align-items: center; justify-content: space-between; }
 .stepper { display: flex; align-items: center; gap: 12px; }
 .stepper button { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold-deep); font-size: 18px; line-height: 1; }

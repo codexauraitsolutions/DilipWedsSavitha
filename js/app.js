@@ -65,6 +65,7 @@
   }
   const fmtFull = (v, tz) => { const p = dateParts(v, tz); return p ? `${p.weekday}, ${p.day} ${p.month} ${p.year}` : v; };
   const fmtEvent = (v, tz) => { const p = dateParts(v, tz); return p ? `${p.weekday}, ${p.month} ${ordinal(+p.day)}` : v; };
+  const fmtShort = (v, tz) => { const p = dateParts(v, tz); return p ? `${p.weekday.slice(0, 3)}, ${p.day} ${p.month.slice(0, 3)}` : v; };
   const fmtBy = (v, tz) => { const p = dateParts(v, tz); return p ? `${p.month} ${p.day}, ${p.year}` : v; };
 
   // ---------- small building blocks ----------
@@ -189,6 +190,14 @@
           <form class="card form reveal" id="rsvpForm" novalidate>
             <label>Guest Name<input name="name" type="text" autocomplete="name" maxlength="60" required></label>
             <label>Contact Number<input name="phone" type="tel" autocomplete="tel" maxlength="20"></label>
+            ${D.rsvp.askSide === false ? '' : `
+            <fieldset>
+              <legend>You Are From</legend>
+              <div class="choice">
+                <label><input type="radio" name="side" value="groom"><span><b>Groom's Side</b>${esc(groom.firstName)}</span></label>
+                <label><input type="radio" name="side" value="bride"><span><b>Bride's Side</b>${esc(bride.firstName)}</span></label>
+              </div>
+            </fieldset>`}
             <fieldset>
               <legend>Attendance</legend>
               <div class="choice">
@@ -196,13 +205,20 @@
                 <label><input type="radio" name="attending" value="no"><span><b>Declines</b>with regret</span></label>
               </div>
             </fieldset>
+            ${D.rsvp.askEvents === false || !on(D.events) || !D.events.items?.length ? '' : `
+            <fieldset id="occasions">
+              <legend>Which Occasions Will You Attend?</legend>
+              <div class="ticks">
+                ${D.events.items.map(e => `<label><input type="checkbox" name="occasion" value="${esc(e.title)}"><i></i><span>${esc(e.title)}${e.date ? `<small>${esc(fmtShort(e.date, tz))}${e.time ? ' · ' + esc(e.time) : ''}</small>` : ''}</span></label>`).join('')}
+              </div>
+            </fieldset>`}
             <div class="guests" id="guestsRow">
               <span class="lbl">Guests Count</span>
               <div class="stepper"><button type="button" data-step="-1" aria-label="Fewer guests">−</button><output id="guestOut">1 Guest</output><button type="button" data-step="1" aria-label="More guests">+</button></div>
             </div>
             <label>Special Blessings<textarea name="message" rows="3" maxlength="300"></textarea></label>
             <p class="form-msg" id="formMsg" role="status"></p>
-            ${D.rsvp.whatsappNumber
+            ${D.rsvp.whatsappNumber || D.rsvp.whatsappBride
               ? `<button class="btn wa" type="submit" id="waBtn">${A.icon('send')}Send to WhatsApp</button>`
               : `<button class="btn gold" type="submit">${A.icon('heart')}${esc(T.rsvpButton)}</button>`}
           </form>
@@ -418,15 +434,26 @@
 
     const read = () => {
       const f = new FormData(form), attending = f.get('attending') === 'yes';
-      return { name: f.get('name').trim(), phone: f.get('phone').trim(), attending, guests: attending ? guests : 0, message: f.get('message').trim() };
+      return { name: f.get('name').trim(), phone: f.get('phone').trim(), side: f.get('side') || '', attending,
+        occasions: attending ? f.getAll('occasion') : [], guests: attending ? guests : 0, message: f.get('message').trim() };
     };
-    const valid = e => { if (e.name) return true; msg.textContent = 'Please enter your name.'; form.elements.name.focus(); return false; };
+    const occasions = $('#occasions');
+    const valid = e => {
+      const stop = (text, el) => { msg.textContent = text; el?.focus(); return false; };
+      if (!e.name) return stop('Please enter your name.', form.elements.name);
+      if (form.elements.side && !e.side) return stop("Please choose groom's side or bride's side.", form.elements.side[0]);
+      if (occasions && e.attending && !e.occasions.length) return stop('Please tick the occasions you will attend.', $('input', occasions));
+      return true;
+    };
+    // The reply goes to the family the guest belongs to; the main number covers a side that has none of its own
+    const numberFor = side => (side === 'bride' && cfg.whatsappBride) || cfg.whatsappNumber || cfg.whatsappBride;
 
     $$('[data-step]', form).forEach(b => b.addEventListener('click', () => {
       guests = Math.min(max, Math.max(1, guests + +b.dataset.step));
       $('#guestOut').textContent = `${guests} Guest${guests > 1 ? 's' : ''}`;
     }));
-    form.addEventListener('change', () => { $('#guestsRow').hidden = form.attending.value !== 'yes'; });
+    const syncAttending = () => { const yes = form.attending.value === 'yes'; $('#guestsRow').hidden = !yes; if (occasions) occasions.hidden = !yes; };
+    form.addEventListener('change', syncAttending);
 
     form.addEventListener('submit', ev => {
       ev.preventDefault();
@@ -436,14 +463,17 @@
       draw([...load(), ...seed]);
       // text/plain keeps this a "simple" request, which Google Apps Script accepts without CORS preflight
       if (cfg.endpoint) fetch(cfg.endpoint, { method: 'POST', body: JSON.stringify({ ...e, wedding: slug }) }).catch(() => {});
-      if (cfg.whatsappNumber) {
+      const number = numberFor(e.side);
+      if (number) {
         const text = [`*Reply to the wedding invitation — ${coupleLine}*`, `Name: ${e.name}`, e.phone && `Contact: ${e.phone}`,
-          `Attendance: ${e.attending ? 'Accepts with pleasure' : 'Declines with regret'}`, e.attending && `Guests: ${e.guests}`,
+          e.side && `From: ${e.side === 'bride' ? "Bride's side" : "Groom's side"}`,
+          `Attendance: ${e.attending ? 'Accepts with pleasure' : 'Declines with regret'}`,
+          e.occasions.length && `Attending: ${e.occasions.join(', ')}`, e.attending && `Guests: ${e.guests}`,
           e.message && `Blessings: ${e.message}`].filter(Boolean).join('\n');
-        window.open(`https://wa.me/${String(cfg.whatsappNumber).replace(/\D/g, '')}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+        window.open(`https://wa.me/${String(number).replace(/\D/g, '')}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
       }
-      form.reset(); guests = 1; $('#guestOut').textContent = '1 Guest'; $('#guestsRow').hidden = false;
-      msg.textContent = cfg.whatsappNumber ? 'WhatsApp is opening — press send there to deliver your reply.' : 'Thank you! Your blessings have been added.';
+      form.reset(); guests = 1; $('#guestOut').textContent = '1 Guest'; syncAttending();
+      msg.textContent = number ? 'WhatsApp is opening — press send there to deliver your reply.' : 'Thank you! Your blessings have been added.';
     });
   }
 
