@@ -4,6 +4,9 @@
 */
 window.WEDDING = {
 
+  // ---------- LOOK ----------
+  style: "traditional",                 // "traditional" = temple, thoranam and lamps;  "garden" = palace, peacocks and animals
+
   // ---------- THE COUPLE ----------
   couple: {
     first: "groom",                       // whose name appears first: "bride" or "groom"
@@ -127,7 +130,7 @@ window.WEDDING = {
 
   // ---------- MUSIC ----------
   // Plays the song file if it exists; otherwise the site's built-in instrumental tune. builtIn: false = silence when there is no file.
-  music: { src: "assets/music/dilip-weds-savitha.mp3", builtIn: true },
+  music: { src: "assets/music/dilip-weds-savitha.m4a", builtIn: true },
 
   // ---------- FOOTER CREDIT ----------
   footer: { credit: "MaNaVi Capture Studios", creditUrl: "" }

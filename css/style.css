@@ -300,3 +300,55 @@ img { display: block; max-width: 100%; }
 .music { position: fixed; z-index: 40; bottom: 20px; right: max(16px, calc(50vw - var(--col) / 2 + 16px)); width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(#e8cf9c, #bda06a); color: #fff; font-size: 20px; box-shadow: 0 8px 20px rgba(156, 122, 60, .45); }
 .music.playing { animation: spin 6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* =====================================================================
+   TRADITIONAL THEME — switched on per wedding with  style: "traditional".
+   Only colours, type and shapes change here; layout and behaviour are shared with the garden theme.
+   ===================================================================== */
+html.traditional {
+  --bg: #fbf7f0; --bg2: #fffaf2; --ink: #3b1a1a; --ink-soft: #75524a;
+  --gold: #c2913f; --gold-deep: #a06f22; --line: #e8d9bd; --dark: #5a1220;
+}
+.traditional body { background: #efe3cd; }
+
+/* names screen: temple tower under the same sky and lettering as the garden theme */
+.traditional .hero { min-height: max(100vh, 760px); min-height: max(100svh, 760px); }
+.traditional .hero-text { padding-top: max(13vh, 122px); }
+/* the tower shrinks on short screens so it never climbs into the names; its wall is drawn past the edges to stay full width */
+.traditional .palace { height: min(48%, 130vw); overflow: visible; }
+.traditional .clouds { position: absolute; top: 3%; left: 0; width: 100%; animation: drift 28s ease-in-out infinite alternate; }
+.traditional .canopy, .traditional .cage { z-index: 1; }
+.traditional .petals i { background: #f59e0b; }
+.traditional .petals i:nth-child(odd) { background: #fbbf24; }
+.traditional .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker .38s ease-in-out infinite alternate; }
+@keyframes flicker { to { transform: scale(.86, 1.12); } }
+.traditional .seal-mono { color: var(--dark); }
+
+/* squarer, gold-edged cards and frames */
+.traditional .frame, .traditional .frame.flip { padding: 7px; border-radius: 150px 150px 8px 8px; border: 1.5px solid var(--gold); outline: 1px solid var(--gold); outline-offset: 4px; box-shadow: 0 14px 30px rgba(90, 50, 10, .16); }
+.traditional .frame .ph, .traditional .frame.flip .ph { border-radius: 143px 143px 4px 4px; }
+.traditional .parents, .traditional .parents.flip { padding: 14px 8px 0; border: 0; border-top: 1px solid var(--gold); border-radius: 0; background: none; box-shadow: none; }
+.traditional .card, .traditional .quote, .traditional .wish, .traditional .timeline li, .traditional .gift-card { border-radius: 6px; border-color: #e3cfa3; }
+.traditional .quote { background: rgba(255, 253, 248, .95); border: 1px solid var(--gold); outline: 1px solid var(--gold); outline-offset: -6px; }
+.traditional .form { border: 1.5px solid var(--gold); border-radius: 4px; outline: 1px solid var(--gold); outline-offset: 5px; }
+.traditional .form input[type=text], .traditional .form input[type=tel], .traditional .form textarea { border-radius: 2px; background: #fffdf8; border-color: #e3cfa3; }
+.traditional .choice span, .traditional .form .ticks label, .traditional .ticks i, .traditional .when, .traditional .respond { border-radius: 4px; }
+.traditional .choice input:checked + span, .traditional .ticks input:checked + i { background: var(--dark); border-color: var(--dark); }
+.traditional .form .ticks label:has(input:checked) { border-color: var(--dark); }
+.traditional .btn { border-radius: 4px; }
+.traditional .btn.dark { background: var(--dark); box-shadow: 0 8px 18px rgba(90, 18, 32, .28); }
+.traditional .cd-card { background: linear-gradient(135deg, #6a1522, #3a0a12); border: 1px solid var(--gold); border-radius: 8px; box-shadow: 0 18px 40px rgba(58, 10, 18, .35); }
+.traditional .event { border-radius: 190px 190px 8px 8px; border-color: var(--gold); }
+.traditional .event-in { border-radius: 183px 183px 4px 4px; background: linear-gradient(#fffdf8, #fbf4e6); }
+.traditional .badge { background: #fbf1da; }
+.traditional .slider { border-radius: 8px; border-color: var(--gold); }
+.traditional .slides { border-radius: 3px; }
+.traditional .wish-card { border-radius: 8px; background: rgba(255, 253, 248, .86); border-color: #e3cfa3; }
+.traditional .envelope { background: linear-gradient(135deg, #6a1522, #3a0a12); border-radius: 6px; }
+.traditional .foot { background: var(--bg2); }
+
+/* the garland decorations are full colour, and the lamp row needs clear space under the wishes */
+.traditional .fronds { opacity: 1; -webkit-mask-image: none; mask-image: none; }
+.traditional .gallery:has(.fronds) { padding-top: 120px; }
+.traditional .rsvp:has(.jungle) { padding-bottom: 176px; }
+.traditional .side-vine { width: 84px; left: -4px; }

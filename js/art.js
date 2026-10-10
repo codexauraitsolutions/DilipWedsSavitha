@@ -555,5 +555,7 @@
   };
   const icon = name => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.calendar}</svg>`;
 
+  // Drawing helpers shared with the other art themes (js/art-traditional.js)
+  window.ART_HELPERS = { f, rng, leaf, blade, arch };
   window.ART = { canopy, palace, gate, cage, perchBird, animals, coupleArt, river, butterflies, tuft, fronds, vine, sideVine, jungle, monkey, birds, sprig, lotus, icon };
 })();

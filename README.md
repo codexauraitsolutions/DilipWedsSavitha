@@ -18,6 +18,7 @@ Open [weddings/karthik-weds-ananya.js](weddings/karthik-weds-ananya.js) in any t
 | Music | `music.src` |
 | Which part of a photo shows in its frame | `photoPosition` on the bride/groom, or `{ src, position }` in the gallery (e.g. `"70% 20%"` = towards the right, near the top) |
 | Colour grade for all photos | `photoFilter` (leave out or `""` for photos exactly as shot) |
+| Overall look | `style: "traditional"` (temple door, gopuram, thoranam, lamps) or leave it out for the garden look (palace, peacocks, animals) |
 | Hide a section | `enabled: false` inside that section |
 | Colours, heading text, section order | `theme`, `text`, `sections` (optional, at the bottom) |
 

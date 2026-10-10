@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const A = window.ART;
+  let A = window.ART;                                    // swapped for another art set when a wedding picks a different style
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -85,6 +85,11 @@
     const monogram = D.couple?.monogram || `${(names[0][0] || '')}&${(names[1][0] || '')}`;
     const coupleLine = `${names[0]} & ${names[1]}`;
 
+    // style: "traditional" swaps in the temple artwork and its colours; anything else keeps the garden look
+    if (D.style === "traditional" && window.ART_TRADITIONAL) {
+      A = Object.assign({}, window.ART, window.ART_TRADITIONAL);
+      document.documentElement.classList.add("traditional");
+    }
     document.title = D.meta?.title || `${coupleLine} | Wedding Invitation`;
     $('meta[name="description"]').content = D.meta?.description || `Join us to celebrate the wedding of ${coupleLine} on ${fmtFull(D.wedding?.date, tz)}.`;
     if (D.photoFilter) document.documentElement.style.setProperty('--photo-filter', D.photoFilter);
