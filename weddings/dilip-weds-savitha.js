@@ -130,7 +130,7 @@ window.WEDDING = {
 
   // ---------- MUSIC ----------
   // Plays the song file if it exists; otherwise the site's built-in instrumental tune. builtIn: false = silence when there is no file.
-  music: { src: "assets/music/dilip-weds-savitha.m4a", builtIn: true },
+  music: { src: "assets/music/dilip-weds-savitha.mp3", builtIn: true },
 
   // ---------- FOOTER CREDIT ----------
   footer: { credit: "MaNaVi Capture Studios", creditUrl: "" }
