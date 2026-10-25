@@ -100,7 +100,9 @@ window.WEDDING = {
       { src: "assets/photos/dilip-weds-savitha/couple-2.jpg", position: "50% 30%" },
       { src: "assets/photos/dilip-weds-savitha/couple-1.jpg", position: "50% 20%" },
       { src: "assets/photos/dilip-weds-savitha/groom.jpg",    position: "50% 22%" },
-      { src: "assets/photos/dilip-weds-savitha/bride.jpg",    position: "78% 30%" }
+      { src: "assets/photos/dilip-weds-savitha/bride.jpg",    position: "78% 30%" },
+      { src: "assets/photos/dilip-weds-savitha/family-1.webp", fit: "contain" },   // wide group photos: fit "contain" shows everyone, nothing cropped
+      { src: "assets/photos/dilip-weds-savitha/family-2.webp", fit: "contain" }
     ]
   },
 
@@ -130,7 +132,7 @@ window.WEDDING = {
 
   // ---------- MUSIC ----------
   // Plays the song file if it exists; otherwise the site's built-in instrumental tune. builtIn: false = silence when there is no file.
-  music: { src: "assets/music/dilip-weds-savitha.mp3", builtIn: true },
+  music: { src: "assets/music/dilip-weds-savitha.mp3", builtIn: true, button: false },   // button: false = no music icon on screen (the song still plays)
 
   // ---------- FOOTER CREDIT ----------
   footer: { credit: "MaNaVi Capture Studios", creditUrl: "" }

@@ -71,7 +71,8 @@
   // ---------- small building blocks ----------
   const heading = (eyebrow, title, ico) => `<header class="head reveal"><p class="eyebrow">${esc(eyebrow)}</p><h2 class="title">${esc(title)}</h2>${ico ? `<span class="rule ico-rule">${A.icon(ico)}</span>` : '<span class="rule"></span>'}</header>`;
   // `position` (e.g. "70% 20%") chooses which part of the picture stays in view when it is cropped to the frame
-  const photo = (src, alt, fallback, position) => `<div class="ph">${fallback}${src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy"${position ? ` style="object-position:${esc(position)}"` : ''}>` : ''}</div>`;
+  // fit "contain" shows the whole picture (for wide group photos) over a blurred copy of itself instead of cropping it
+  const photo = (src, alt, fallback, position, fit) => `<div class="ph${fit === 'contain' && src ? ' ph-contain' : ''}">${fallback}${src && fit === 'contain' ? `<img class="ph-bg" src="${esc(src)}" alt="" aria-hidden="true" loading="lazy">` : ''}${src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy"${position ? ` style="object-position:${esc(position)}"` : ''}>` : ''}</div>`;
   // A gallery entry is either "path.jpg" or { src: "path.jpg", position: "50% 20%" }
   const shot = p => (typeof p === 'string' ? { src: p } : p || {});
   const on = sec => sec && sec.enabled !== false;
@@ -176,7 +177,7 @@
           ${heading(T.galleryEyebrow, T.galleryTitle, 'heart')}
           ${(() => {
             const grid = D.gallery.layout === 'grid';
-            const tiles = D.gallery.photos.map(shot).map((p, i) => `<button class="tile ${grid ? 'reveal' : ''}" type="button" data-i="${i}" aria-label="Open photo ${i + 1}">${photo(p.src, `${coupleLine} photo ${i + 1}`, A.icon('heart'), p.position)}</button>`).join('');
+            const tiles = D.gallery.photos.map(shot).map((p, i) => `<button class="tile ${grid ? 'reveal' : ''}" type="button" data-i="${i}" aria-label="Open photo ${i + 1}">${photo(p.src, `${coupleLine} photo ${i + 1}`, A.icon('heart'), p.position, p.fit)}</button>`).join('');
             return grid ? `<div class="grid">${tiles}</div>` : `
               <div class="slider reveal">
                 <div class="slides" id="slides">${tiles}</div>
@@ -296,7 +297,6 @@
           <p class="hero-city">${esc(D.wedding?.city)}</p>
         </div>
         ${A.palace()}
-        <a class="scroll" href="#couple" aria-label="Scroll down">${A.icon('down')}</a>
       </section>
 
       ${(D.sections || DEFAULT_SECTIONS).map(k => (S[k] ? S[k]() : '')).join('')}
@@ -304,6 +304,7 @@
 
       ${D.music?.src || D.music?.builtIn !== false ? `<button class="music" id="musicBtn" type="button" aria-label="Toggle music" hidden>${A.icon('music')}</button>` : ''}
       ${D.music?.src ? `<audio id="audio" src="${esc(D.music.src)}" loop preload="none"></audio>` : ''}
+      <button class="scroll-hint" id="scrollHint" type="button" hidden><span>Scroll Down</span><i></i><i></i></button>
       <div class="lightbox" id="lightbox" hidden>
         <button class="lb-close" type="button" aria-label="Close">${A.icon('close')}</button>
         <button class="lb-prev" type="button" aria-label="Previous">${A.icon('left')}</button>
@@ -349,7 +350,13 @@
       document.body.classList.remove('locked');
       document.body.classList.add('opened');
       opened = true;
-      if (player) { btn.hidden = false; tune?.unlock(); player.play(); }
+      if (player) { btn.hidden = music.button === false; tune?.unlock(); player.play(); }
+      // Show a scroll hint once the gate has opened; it goes away for good on the first scroll
+      const hint = $('#scrollHint');
+      const dismiss = () => { if (scrollY > 60) { hint.classList.add('gone'); removeEventListener('scroll', dismiss); } };
+      setTimeout(() => { if (scrollY <= 60) hint.hidden = false; }, 1800);
+      addEventListener('scroll', dismiss, { passive: true });
+      hint.addEventListener('click', () => $('#hero').nextElementSibling?.scrollIntoView({ behavior: 'smooth' }));
       setTimeout(() => gate.remove(), 1900);
     }, { once: true });
   }
