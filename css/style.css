@@ -217,7 +217,7 @@ img { display: block; max-width: 100%; }
 .grid .tile:nth-child(3n + 1) { border-radius: 90px 90px 16px 16px; }
 .grid .tile:nth-child(6n + 3), .grid .tile:nth-child(6n + 6) { grid-column: span 2; aspect-ratio: 16 / 10; border-radius: 16px; }
 .slider { position: relative; z-index: 1; max-width: 400px; margin: 0 auto; padding: 8px; background: #fff; border: 1px solid rgba(189, 160, 106, .45); border-radius: 26px; box-shadow: 0 16px 36px rgba(47, 62, 54, .12); }
-.slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 19px; }
+.slides { display: flex; align-items: flex-start; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 19px; transition: height .45s ease; }
 .slides::-webkit-scrollbar { display: none; }
 .slider .tile { flex: 0 0 100%; scroll-snap-align: center; border-radius: 0; box-shadow: none; }
 .sl-btn { position: absolute; top: 50%; translate: 0 -50%; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: var(--ink); font-size: 17px; box-shadow: 0 6px 16px rgba(47, 62, 54, .22); }

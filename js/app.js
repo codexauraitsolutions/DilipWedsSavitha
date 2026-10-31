@@ -390,7 +390,24 @@
     if (slides) {
       const dots = $$('#dots button');
       let cur = 0, timer, settle;
-      const mark = n => { cur = n; dots.forEach((d, j) => d.classList.toggle('on', j === cur)); };
+      const tiles = $$('.tile', slides);
+      // The frame takes the height of the photo on show, so wide (landscape) pictures fill it edge to edge instead of being cropped
+      const fitHeight = () => { const t = tiles[cur]; if (t) slides.style.height = t.offsetHeight + 'px'; };
+      tiles.forEach((t, j) => {
+        const im = $('img:not(.ph-bg)', t);
+        if (!im) return;
+        const shape = () => {
+          if (im.naturalWidth > im.naturalHeight * 1.05) {
+            t.classList.add('wide'); t.style.aspectRatio = `${im.naturalWidth} / ${im.naturalHeight}`;
+            $('.ph-contain', t)?.classList.remove('ph-contain'); $('.ph-bg', t)?.remove();
+          }
+          if (j === cur) fitHeight();
+        };
+        im.loading = 'eager';                                      // shapes are needed before the guest swipes to them
+        if (im.complete && im.naturalWidth) shape(); else im.addEventListener('load', shape);
+      });
+      addEventListener('resize', fitHeight);
+      const mark = n => { cur = n; dots.forEach((d, j) => d.classList.toggle('on', j === cur)); fitHeight(); };
       const go = n => { mark((n + photos.length) % photos.length); slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' }); };
       // Restarted on every interaction so the slider never moves right after the guest touches it
       const play = () => { clearInterval(timer); if (autoplaySecs > 0 && photos.length > 1) timer = setInterval(() => go(cur + 1), autoplaySecs * 1000); };
@@ -403,6 +420,7 @@
       $('.sl-prev').addEventListener('click', () => { go(cur - 1); play(); });
       $('.sl-next').addEventListener('click', () => { go(cur + 1); play(); });
       dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.i); play(); }));
+      fitHeight();
       play();
     }
 
