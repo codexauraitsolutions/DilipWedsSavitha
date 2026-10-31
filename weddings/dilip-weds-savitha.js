@@ -101,8 +101,8 @@ window.WEDDING = {
       { src: "assets/photos/dilip-weds-savitha/couple-1.jpg", position: "50% 20%" },
       { src: "assets/photos/dilip-weds-savitha/groom.jpg",    position: "50% 22%" },
       { src: "assets/photos/dilip-weds-savitha/bride.jpg",    position: "78% 30%" },
-      { src: "assets/photos/dilip-weds-savitha/family-1.webp", fit: "contain" },   // wide group photos: fit "contain" shows everyone, nothing cropped
-      { src: "assets/photos/dilip-weds-savitha/family-2.webp", fit: "contain" }
+      { src: "assets/photos/dilip-weds-savitha/family-1.jpg", fit: "contain" },   // wide group photos: fit "contain" shows everyone, nothing cropped
+      { src: "assets/photos/dilip-weds-savitha/family-2.jpg", fit: "contain" }
     ]
   },
 

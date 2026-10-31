@@ -44,7 +44,8 @@
 
   if (!/^[a-z0-9-]+$/.test(slug)) return fail();
   const loader = document.createElement('script');
-  loader.src = `weddings/${slug}.js`;
+  // Always fetch the latest details, so a guest who opened an earlier version never sees stale names, dates or photos
+  loader.src = `weddings/${slug}.js?v=${Date.now()}`;
   loader.onload = () => (window.WEDDING ? start(window.WEDDING) : fail());
   loader.onerror = fail;
   document.head.append(loader);
